@@ -4,7 +4,7 @@
 ### 通用字段
 字段 | 类型 |  说明  
 -|-|-
-event | String | 标记不同日志记录
+event | String | 事件标识，区分不同日志
 appId | Number | 应用ID  
 userId | Number | 平台用户ID 
 roleId | String | 角色ID 
@@ -22,7 +22,7 @@ logTime| Datetime | 时间，UTC时区
 
 字段 | 类型 |  说明  
 -|-|-
-os | String | 如Android、iOS等
+os | Number | iOS:0, Android:1, 其他：2
 osVersion | String | 操作系统版本OS 11.2.2、Android 8.0.0等
 deviceId | String | iOS取用户的IDFV，Android取androidID /UUID
 deviceADId | String | iOS取用户的IDFA，Android取Google Advertising ID
@@ -60,8 +60,7 @@ roleName | String | 角色名字 |
 -|-|-
 通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
 roleName | String | 角色名字 |
-level | String | 当前等级 |
-vipLevel | String | VIP等级 |
+vipLevel | String | VIP等级，没有为空 |
 
 **建议上报时机：**玩家登录成功后上报
 
@@ -82,6 +81,7 @@ userInfo 为用户扩展数据，方便进行用户数据核查
     curDiamonds: 1000, // 钻石数
     curCoins: 1000, // 金币数
     fightPower: 29, // 战力
+    ...
 }
 ```
 
@@ -104,8 +104,8 @@ oldNickName | String | 修改前的昵称 |
 字段 | 类型 |  说明  
 -|-|-
 通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
-prevLevel | String | 当前等级 |
-level | String | 当前等级 |
+prevLevel | String | 升级前的等级 |
+level | String | 升级后的等级（已在通用字段中） |
 
 **建议上报时机：**玩家升级后上报
 
