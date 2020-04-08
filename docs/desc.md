@@ -40,6 +40,121 @@
 java示例：
 
 ```java
+    package com.atron.logs;
+
+    import org.apache.commons.codec.binary.Base64;
+    import org.apache.commons.logging.Log;
+    import org.apache.commons.logging.LogFactory;
+    import org.apache.http.HttpEntity;
+    import org.apache.http.HttpResponse;
+    import org.apache.http.HttpStatus;
+    import org.apache.http.client.HttpClient;
+    import org.apache.http.client.methods.CloseableHttpResponse;
+    import org.apache.http.client.methods.HttpPost;
+    import org.apache.http.entity.StringEntity;
+    import org.apache.http.impl.client.CloseableHttpClient;
+    import org.apache.http.impl.client.HttpClients;
+    import org.apache.http.util.EntityUtils;
+
+    import javax.crypto.Mac;
+    import javax.crypto.spec.SecretKeySpec;
+    import java.io.BufferedReader;
+    import java.io.IOException;
+    import java.io.InputStreamReader;
+    import java.io.UnsupportedEncodingException;
+    import java.nio.charset.Charset;
+    import java.util.HashMap;
+    import java.util.Map;
+    import java.util.logging.Logger;
+    import java.util.stream.Collectors;
+
+    public class Sample {
+
+        static  class HttpResult {
+            int httpStatus;
+            String response;
+
+            public void setHttpStatus(int httpStatus) {
+                this.httpStatus = httpStatus;
+            }
+
+            public void setResponse(String response) {
+                this.response = response;
+            }
+
+            public int getHttpStatus() {
+                return httpStatus;
+            }
+
+            public String getResponse() {
+                return response;
+            }
+
+            @Override
+            public String toString() {
+                return "HttpResult{" +
+                        "httpStatus=" + httpStatus +
+                        ", response='" + response + '\'' +
+                        '}';
+            }
+        }
+
+        public static String hmacSha1(String src, String key) {
+            try {
+                SecretKeySpec signingKey = new SecretKeySpec(key.getBytes("utf-8"), "HmacSHA1");
+                Mac mac = Mac.getInstance("HmacSHA1");
+                mac.init(signingKey);
+                byte[] rawHmac = mac.doFinal(src.getBytes("utf-8"));
+                return Base64.encodeBase64String(rawHmac);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public static HttpResult httpPost(String url, Map<String,String > headers, String body) throws IOException {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost post = new HttpPost(url);
+            for(Map.Entry<String,String> header : headers.entrySet())
+                post.setHeader(header.getKey(),header.getValue());
+            StringEntity entity = new StringEntity(body, Charset.forName("utf-8"));
+
+            post.setEntity(entity);
+            CloseableHttpResponse response = httpClient.execute(post);
+            String result  = "";
+            try {
+                result = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
+                        .lines().collect(Collectors.joining());
+            } finally {
+                response.close();
+            }
+            HttpResult httpResult = new HttpResult();
+            httpResult.setHttpStatus(response.getStatusLine().getStatusCode());
+            httpResult.setResponse(result);
+            return httpResult;
+        }
+
+        public  static  void  main(String[] arg) throws IOException, InterruptedException {
+
+            Map<String,String> map = new HashMap<>();
+            Log logger = LogFactory.getLog(Sample.class);
+            String body = "[{\"body\": \"{\\\"appId\\\": \\\"1313131\\\", \\\"zoneId\\\": \\\"1313\\\", \\\"version\\\": \\\"1.1.0\\\",\\\"event\\\": \\\"noviceNodeLogs\\\", \\\"recordTime\\\": \\\"2020-04-03 10:59:45\\\",\\\"data\\\": {\\\"userId\\\": \\\"1\\\",\\\"logTime\\\":\\\"2018-12-13 00:00:01\\\"}}\"}" +
+                    ",{\"body\": \"{\\\"appId\\\": \\\"1313131\\\", \\\"zoneId\\\": \\\"1313\\\", \\\"version\\\": \\\"1.1.0\\\",\\\"event\\\": \\\"noviceNodeLogs\\\", \\\"recordTime\\\": \\\"2020-04-03 10:59:45\\\",\\\"data\\\": {\\\"userId\\\": \\\"1\\\",\\\"logTime\\\":\\\"2018-12-13 00:00:01\\\"}}\"}]";
+            String appSecret = "SECRET";
+            map.put("Authorization",hmacSha1(body,appSecret));
+            while (true) {
+                HttpResult httpResult = httpPost("https://www.domain.fun/test", map, body);
+
+                if (httpResult.getHttpStatus() == HttpStatus.SC_OK) {
+                    logger.debug(httpResult);
+                    logger.debug("log send success");
+                } else {
+                    logger.error("log send failure");
+                }
+                Thread.sleep(1000);
+            }
+        }
+
+    }
 
 ```
 
