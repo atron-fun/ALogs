@@ -1,20 +1,33 @@
 # Getting Started
 
 ## 通用日志字段
-### 通用字段
+
+### 全局字段
+
+全局字段所有埋点日志必须接入，必须指定。
+
 字段 | 类型 |  说明  
 -|-|-
-event | String | 事件标识，区分不同日志
-appId | Number | 应用ID  
+appId | Number | 应用ID(由平台分配)
+event | String | 事件标识，区分不同日志（比如新手节点event: noviceNodeLogs）
+zoneId | String | 区服ID （如无区服概念默认为“1”）
+version | String | 游戏版本号 
+recordTime| Datetime | 数据上报时间，UTC时区 
+
+### 通用字段
+
+通用字段日志取到的情况下，全部上报。
+
+字段 | 类型 |  说明  
+-|-|-
 userId | Number | 平台用户ID 
 roleId | String | 角色ID 
+roleName | String | 角色ID 
 level | String | 等级 
-zoneId | String | 区服ID （如无区服概念默认为“1”） 
 area | String | 国家/地区(ISO 3166-1 alpha-2，即两位大写英文字母) 
-version | String | 游戏版本号 
 ip | String | ip地址 
 clientVersion | String | 客户端版本号（客户端日志时需要）
-logTime| Datetime | 时间，UTC时区 
+logTime | Datetime | 数据产生时间，UTC时区 
 
 ### 客户端日志专属字段
 
@@ -28,6 +41,7 @@ deviceId | String | iOS取用户的IDFV，Android取androidID /UUID
 deviceADId | String | iOS取用户的IDFA，Android取Google Advertising ID
 sdkVersion | String | SDK版本号 |
 model | String | 型号如iPhone 8等 |
+network | String | 网络模式（wifi/4G/5G）
 
 ## 日志列表
 
@@ -59,18 +73,6 @@ roleName | String | 角色名字 |
 字段 | 类型 |  说明  
 -|-|-
 通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
-roleName | String | 角色名字 |
-vipLevel | String | VIP等级，没有为空 |
-
-**建议上报时机：**玩家登录成功后上报
-
-
-### 登出日志 
-**event: <code>logoutLogs</code>**
-
-字段 | 类型 |  说明  
--|-|-
-通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
 userInfo | JSONObject | 用户属性信息
 
 userInfo 为用户扩展数据，方便进行用户数据核查
@@ -81,6 +83,31 @@ userInfo 为用户扩展数据，方便进行用户数据核查
     curDiamonds: 1000, // 钻石数
     curCoins: 1000, // 金币数
     fightPower: 29, // 战力
+    vipLevel: 3 // vip等级
+    ...
+}
+```
+**建议上报时机：**玩家登录成功后上报
+
+
+### 登出日志 
+**event: <code>logoutLogs</code>**
+
+字段 | 类型 |  说明  
+-|-|-
+通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
+
+userInfo | JSONObject | 用户属性信息
+loginTime | Datetime | 登入时间，UTC时区 
+userInfo 为用户扩展数据，方便进行用户数据核查
+
+``` javascript
+{
+    gender: 0 , // 性别
+    curDiamonds: 1000, // 钻石数
+    curCoins: 1000, // 金币数
+    fightPower: 29, // 战力
+    vipLevel: 3 // vip等级
     ...
 }
 ```
@@ -124,7 +151,7 @@ count | Number | 消耗/获取数量（消耗为负值） |
 curCount | Number | 当前数量 |
 prevCount | Number | 变化前数量 |
 
-**建议上报时机：**玩家获取到资源时上报
+**建议上报时机：**玩家资源变动时上报
 
 ### 物品道具日志 
 **event: <code>itemLogs</code>**
