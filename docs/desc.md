@@ -21,17 +21,17 @@
 - 请求参数：JSON （单条json放在body里面，注意json拼装，全局字段独立出来，通用字段放到data里面）
 
     样例：
-
 ```json
-[
-    {
-        "body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"
-    },
-    {
-        "body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"
-    }
-]
+    [
+        {
+            "body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}
+        },
+        {
+            "body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}
+        }
+    ]
 ```
+
 
     详见<a href='/#/logs'>日志文档</a>
     
@@ -207,9 +207,9 @@ Python示例：
 Bash示例：
 
 ```bash
-KEY=$(echo -n '[{"body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"},{"body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"}]' | openssl dgst -hmac 'SECRET' -sha1 -binary | base64)
+KEY=$(echo -n '[{"body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}},{"body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}}]' | openssl dgst -hmac 'SECRET' -sha1 -binary | base64)
 
-curl -X POST -H "Authorization:$(KEY)" -d'[{"body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"},{"body": "{\"appId\": \"1313131\", \"zoneId\": \"1313\", \"version\": \"1.1.0\",\"event\": \"noviceNodeLogs\", \"recordTime\": \"2020-04-03 10:59:45\",\"data\": {\"userId\": \"1\",\"logTime\":\"2018-12-13 00:00:01\"}}"}]'  http://www.domain.fun/test
+curl -X POST -H "Authorization:$(KEY)" -d'[{"body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}},{"body": {"appId": "1313131", "zoneId": "1313", "version": "1.1.0","event": "noviceNodeLogs", "recordTime": "2020-04-03 10:59:45","data": {"userId": "1","logTime":"2018-12-13 00:00:01"}}}]'  http://www.domain.fun/test
 
 ```
 
