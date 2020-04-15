@@ -12,7 +12,7 @@ appId | Number | 应用ID(由平台分配)
 event | String | 事件标识，区分不同日志（比如新手节点event: noviceNodeLogs）
 zoneId | String | 区服ID （如无区服概念默认为“1”）
 version | String | 游戏版本号 
-recordTime| Datetime | 数据上报时间，UTC时区 
+recordTime| Datetime | 数据上报时间，UTC时区（"YYYY-MM-DD HH:MM:SS"） 
 
 ### 通用字段
 
@@ -22,12 +22,12 @@ recordTime| Datetime | 数据上报时间，UTC时区
 -|-|-
 userId | Number | 平台用户ID 
 roleId | String | 角色ID 
-roleName | String | 角色ID 
+roleName | String | 角色名
 level | String | 等级 
 area | String | 国家/地区(ISO 3166-1 alpha-2，即两位大写英文字母) 
 ip | String | ip地址 
 clientVersion | String | 客户端版本号（客户端日志时需要）
-logTime | Datetime | 数据产生时间，UTC时区 
+logTime | Datetime | 数据产生时间，UTC时区（"YYYY-MM-DD HH:MM:SS"）
 
 ### 客户端日志专属字段
 
@@ -115,13 +115,13 @@ userInfo 为用户扩展数据，方便进行用户数据核查
 **建议上报时机：**玩家退出游戏后，下次打开app时上报
 
 ### 修改昵称日志 
-**event: <code>nickNameLogs</code>**
+**event: <code>roleNameLogs</code>**
 
 字段 | 类型 |  说明  
 -|-|-
 通用字段 | - | <a href='#/logs?id=通用字段'>详见通用字段</a> |
-nickName | String | 修改后的昵称 |
-oldNickName | String | 修改前的昵称 |
+roleName | String | 修改后的昵称 |
+oldRoleName | String | 修改前的昵称 |
 
 **建议上报时机：**玩家修改昵称成功后上报
 
